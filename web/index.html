@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2563eb" />
+  <title>Gemini Live Translate · 跨平台版</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Linux / Windows / Android Web/PWA Adapter</p>
+        <h1>Gemini Live 即时语音翻译</h1>
+        <p class="subtitle">通过浏览器采集屏幕/标签页音频或麦克风音频，重采样为 16kHz PCM 后发送到 Gemini Live，并播放 24kHz PCM 翻译语音。</p>
+      </div>
+      <div class="platform-card" aria-live="polite">
+        <span class="label">当前平台</span>
+        <strong id="platformLabel">检测中…</strong>
+        <small id="platformHint">正在检查浏览器能力</small>
+      </div>
+    </header>
+
+    <section class="panel controls" aria-label="连接与采集设置">
+      <div class="grid two">
+        <label class="field">
+          <span>Gemini API Key</span>
+          <input id="apiKey" type="password" autocomplete="off" placeholder="输入 API Key" />
+        </label>
+        <label class="field">
+          <span>模型</span>
+          <input id="modelName" list="modelOptions" spellcheck="false" value="gemini-3.5-live-translate-preview" />
+          <datalist id="modelOptions">
+            <option value="gemini-3.5-live-translate-preview"></option>
+            <option value="gemini-2.0-flash-exp"></option>
+          </datalist>
+        </label>
+      </div>
+
+      <div class="grid three">
+        <label class="field">
+          <span>目标语言</span>
+          <input id="targetLanguage" value="zh-CN" spellcheck="false" />
+        </label>
+        <label class="field">
+          <span>音频来源</span>
+          <select id="sourceMode">
+            <option value="display">屏幕/标签页音频（桌面推荐）</option>
+            <option value="microphone">麦克风音频（Android/兜底）</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>音频块</span>
+          <select id="chunkDuration">
+            <option value="100">100ms（低延迟）</option>
+            <option value="200">200ms（稳妥）</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="toggles">
+        <label><input id="rememberKey" type="checkbox" /> 记住 API Key（仅保存在本浏览器）</label>
+        <label><input id="showBilingual" type="checkbox" checked /> 显示原文 + 译文</label>
+        <label><input id="enablePlayback" type="checkbox" checked /> 播放翻译语音</label>
+      </div>
+
+      <div class="actions">
+        <button id="startButton" class="primary">开始翻译</button>
+        <button id="stopButton" disabled>停止</button>
+        <button id="clearButton" type="button">清空字幕</button>
+      </div>
+    </section>
+
+    <section class="panel status-panel" aria-live="polite">
+      <div class="status-line">
+        <span id="statusDot" class="dot idle"></span>
+        <strong id="statusText">未连接</strong>
+      </div>
+      <p id="statsText">WebSocket：未连接 · 已发送音频块：0 · 捕获：未启动</p>
+    </section>
+
+    <section class="panel subtitles" aria-label="实时字幕">
+      <div class="section-heading">
+        <h2>实时字幕</h2>
+        <span>最多保留最近 25 句</span>
+      </div>
+      <div id="subtitleList" class="subtitle-list empty">等待音频输入…</div>
+    </section>
+
+    <section class="panel compatibility">
+      <h2>平台说明</h2>
+      <ul>
+        <li><strong>Linux / Windows：</strong>推荐 Chrome 或 Edge，选择“分享标签页/窗口/屏幕”时勾选音频共享。</li>
+        <li><strong>Android：</strong>多数浏览器不开放系统音频采集；默认使用麦克风模式。若部署为 HTTPS/PWA，可直接在手机浏览器访问。</li>
+        <li><strong>安全上下文：</strong>音频采集通常要求 HTTPS 或 localhost。请不要直接双击 file:// 方式长期使用。</li>
+      </ul>
+    </section>
+
+    <details class="panel log-panel">
+      <summary>运行日志</summary>
+      <pre id="logOutput"></pre>
+    </details>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

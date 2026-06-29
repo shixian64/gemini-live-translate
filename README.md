@@ -2,6 +2,14 @@
 
 MeetingTranslator - 一個基於 macOS SwiftUI、原創 ScreenCaptureKit 與 Gemini 3.5 Live (Bi-directional) Translate API 的即時語音會議翻譯與播報工具。
 
+## 跨平台适配（Linux / Windows / Android）
+
+仓库现在新增了不依赖 macOS 原生框架的 Web/PWA 适配入口，位于 [`web/`](web/)：
+
+- Linux / Windows：推荐用 Chrome 或 Edge 的屏幕/标签页音频共享。
+- Android：多数浏览器无法直接采集系统音频，默认提供麦克风采集兜底；如需真正系统音频，需要后续扩展 Android 原生 `MediaProjection + AudioRecord`。
+- 无需构建即可运行，详见 [`web/README.md`](web/README.md)。
+
 ---
 
 ## 🔗 參考資源
